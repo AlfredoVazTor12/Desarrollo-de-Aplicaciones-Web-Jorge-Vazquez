@@ -3,56 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevTrack | Dashboard de Proyectos</title>
-    
-    <!-- Librería externa: SweetAlert2 (Para alertas de validación) -->
+    <title>DevTrack | Dashboard General</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <!-- Enlace a la hoja de estilos externa -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <aside class="sidebar">
-        <div class="sidebar-header">
-            <h2>DevTrack</h2>
-        </div>
+        <div class="sidebar-header"><h2>DevTrack</h2></div>
         <ul class="nav-links">
-            <li><a href="#" class="active">Dashboard General</a></li>
-            <li><a href="#">Repositorios</a></li>
-            <li><a href="#">Reportes</a></li>
+            <li><a href="index.html" class="active">Dashboard General</a></li>
+            <li><a href="repositorios.html">Repositorios</a></li>
+            <li><a href="reportes.html">Reportes</a></li>
         </ul>
     </aside>
-
     <main class="main-content">
         <header class="topbar">
             <h1>Panel de Control</h1>
-            <!-- PASO 2: Contenedor para mostrar la fecha actual -->
             <div style="font-weight: bold; font-size: 0.9rem; color: #5e6c84;">
                 FECHA DEL SISTEMA: <span id="fecha-actual">Cargando...</span>
             </div>
         </header>
-
         <div class="dashboard-grid">
-            
-            <!-- PANEL IZQUIERDO: Formulario de Registro de Proyecto -->
             <section class="panel">
                 <div class="panel-header">
                     <h3>Registrar Nuevo Proyecto (Validación JS)</h3>
                 </div>
                 <div class="panel-body">
-                    <!-- PASO 1: Formulario a validar -->
                     <form id="form-proyecto">
                         <div class="form-group">
                             <label for="nombre">Nombre del Proyecto *</label>
                             <input type="text" id="nombre" class="form-control" placeholder="Ej: API Restful">
                         </div>
-
                         <div class="form-group">
                             <label for="email">Correo del Líder Técnico *</label>
                             <input type="text" id="email" class="form-control" placeholder="admin@devtrack.com">
                         </div>
-
                         <div class="form-group">
                             <label for="tecnologia">Tecnología Principal *</label>
                             <select id="tecnologia" class="form-control">
@@ -62,43 +47,30 @@
                                 <option value="java">Java / Spring</option>
                             </select>
                         </div>
-
                         <div class="form-group">
-                            <label>
-                                <input type="checkbox" id="repositorio">
-                                Crear repositorio público inmediatamente
-                            </label>
+                            <label><input type="checkbox" id="repositorio"> Crear repositorio público inmediatamente</label>
                         </div>
-
-                        <button type="submit" class="btn-primary">Guardar Proyecto</button>
+                        <button type="submit" class="btn-primary full-width">Guardar Proyecto</button>
                     </form>
                 </div>
             </section>
-
-            <!-- PANEL DERECHO: Calculadora -->
             <aside class="panel">
-                <div class="panel-header">
-                    <h3>Herramientas: Calculadora</h3>
-                </div>
+                <div class="panel-header"><h3>Herramientas: Calculadora</h3></div>
                 <div class="panel-body">
-                    <!-- PASO 2: Calculadora funcional -->
                     <input type="text" id="calc-display" class="calc-display" readonly value="0">
                     <div class="calc-grid">
                         <button class="calc-btn" onclick="calcInput('7')">7</button>
                         <button class="calc-btn" onclick="calcInput('8')">8</button>
                         <button class="calc-btn" onclick="calcInput('9')">9</button>
                         <button class="calc-btn op" onclick="calcInput('/')">/</button>
-                        
                         <button class="calc-btn" onclick="calcInput('4')">4</button>
                         <button class="calc-btn" onclick="calcInput('5')">5</button>
                         <button class="calc-btn" onclick="calcInput('6')">6</button>
                         <button class="calc-btn op" onclick="calcInput('*')">*</button>
-                        
                         <button class="calc-btn" onclick="calcInput('1')">1</button>
                         <button class="calc-btn" onclick="calcInput('2')">2</button>
                         <button class="calc-btn" onclick="calcInput('3')">3</button>
                         <button class="calc-btn op" onclick="calcInput('-')">-</button>
-                        
                         <button class="calc-btn op" style="background-color: #dc3545; color: white;" onclick="calcClear()">C</button>
                         <button class="calc-btn" onclick="calcInput('0')">0</button>
                         <button class="calc-btn op" style="background-color: #28a745; color: white;" onclick="calcEval()">=</button>
@@ -106,11 +78,8 @@
                     </div>
                 </div>
             </aside>
-
         </div>
     </main>
-
-    <!-- Enlace al archivo JavaScript externo -->
     <script src="script.js"></script>
 </body>
 </html>
