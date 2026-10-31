@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevTrack | Reportes</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header"><h2>DevTrack</h2></div>
+        <ul class="nav-links">
+            <li><a href="index.html">Dashboard General</a></li>
+            <li><a href="repositorios.html">Repositorios</a></li>
+            <li><a href="reportes.html" class="active">Reportes</a></li>
+        </ul>
+    </aside>
+    <main class="main-content">
+        <header class="topbar">
+            <h1>Reportes y Estadísticas</h1>
+            <div style="font-weight: bold; font-size: 0.9rem; color: #5e6c84;">
+                FECHA DEL SISTEMA: <span id="fecha-actual">Cargando...</span>
+            </div>
+        </header>
+        <div class="dashboard-grid">
+            <section class="panel">
+                <div class="panel-header">
+                    <h3>Progreso de Proyectos Activos (prueba ejemplo)</h3>
+                </div>
+                <div class="panel-body">
+                    <p style="margin-bottom: 10px;"><strong>API Restful (Backend)</strong></p>
+                    <div style="width: 100%; background-color: #ebecf0; height: 20px; margin-bottom: 20px;">
+                        <div style="width: 75%; background-color: #36b37e; height: 100%; text-align: center; color: white; font-size: 0.75rem; font-weight: bold; line-height: 20px;">75%</div>
+                    </div>
+                    
+                    <p style="margin-bottom: 10px;"><strong>Dashboard UI (Frontend)</strong></p>
+                    <div style="width: 100%; background-color: #ebecf0; height: 20px; margin-bottom: 20px;">
+                        <div style="width: 40%; background-color: #ff991f; height: 100%; text-align: center; color: white; font-size: 0.75rem; font-weight: bold; line-height: 20px;">40%</div>
+                    </div>
+
+                    <p style="margin-bottom: 10px;"><strong>Base de Datos (Migración)</strong></p>
+                    <div style="width: 100%; background-color: #ebecf0; height: 20px;">
+                        <div style="width: 100%; background-color: #0052cc; height: 100%; text-align: center; color: white; font-size: 0.75rem; font-weight: bold; line-height: 20px;">100%</div>
+                    </div>
+                </div>
+            </section>
+            
+            <aside class="panel">
+                <div class="panel-header">
+                    <h3>Resumen General</h3>
+                </div>
+                <div class="panel-body">
+                    <div style="margin-bottom: 15px; padding: 15px; background-color: #fafbfc; border: 1px solid #dfe1e6;">
+                        <h4 style="color: #5e6c84; font-size: 0.8rem; text-transform: uppercase;">Total Proyectos</h4>
+                        <p style="font-size: 2rem; font-weight: bold; color: #172b4d;">12</p>
+                    </div>
+                    <div style="margin-bottom: 15px; padding: 15px; background-color: #fafbfc; border: 1px solid #dfe1e6;">
+                        <h4 style="color: #5e6c84; font-size: 0.8rem; text-transform: uppercase;">Issues Abiertos</h4>
+                        <p style="font-size: 2rem; font-weight: bold; color: #ff5630;">34</p>
+                    </div>
+                    <div style="padding: 15px; background-color: #fafbfc; border: 1px solid #dfe1e6;">
+                        <h4 style="color: #5e6c84; font-size: 0.8rem; text-transform: uppercase;">Horas Registradas</h4>
+                        <p style="font-size: 2rem; font-weight: bold; color: #0052cc;">128h</p>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>

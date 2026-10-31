@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevTrack | Repositorios</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header"><h2>DevTrack</h2></div>
+        <ul class="nav-links">
+            <li><a href="index.html">Dashboard General</a></li>
+            <li><a href="repositorios.html" class="active">Repositorios</a></li>
+            <li><a href="reportes.html">Reportes</a></li>
+        </ul>
+    </aside>
+    <main class="main-content">
+        <header class="topbar">
+            <h1>Gestión de Repositorios</h1>
+            <div style="font-weight: bold; font-size: 0.9rem; color: #5e6c84;">
+                FECHA DEL SISTEMA: <span id="fecha-actual">Cargando...</span>
+            </div>
+        </header>
+        <div class="full-grid">
+            <section class="panel">
+                <div class="panel-header">
+                    <h3>Repositorios Vinculados (prueba/ejemplo)</h3>
+                    <button class="btn-primary" onclick="Swal.fire({icon: 'info', title: 'Sincronizando...', text: 'Conectando con GitHub API.', customClass: { popup: 'square-popup' }, showClass: { popup: '', backdrop: '' }, hideClass: { popup: '', backdrop: '' }})">Sincronizar GitHub</button>
+                </div>
+                <div class="panel-body" style="padding: 0;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre del Repositorio</th>
+                                <th>Lenguaje</th>
+                                <th>Último Commit</th>
+                                <th>Estado CI/CD</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>backend-api-v1</strong></td>
+                                <td><span class="badge">Node.js</span></td>
+                                <td>Hace 2 horas</td>
+                                <td><span class="badge status-done">PASSED</span></td>
+                                <td><button class="btn-secondary">Ver Código</button></td>
+                            </tr>
+                            <tr>
+                                <td><strong>frontend-dashboard</strong></td>
+                                <td><span class="badge">React</span></td>
+                                <td>Hace 1 día</td>
+                                <td><span class="badge status-dev">BUILDING</span></td>
+                                <td><button class="btn-secondary">Ver Código</button></td>
+                            </tr>
+                            <tr>
+                                <td><strong>auth-microservice</strong></td>
+                                <td><span class="badge">Python</span></td>
+                                <td>Hace 3 días</td>
+                                <td><span class="badge status-done">PASSED</span></td>
+                                <td><button class="btn-secondary">Ver Código</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
