@@ -7,3 +7,7 @@
 # Progreso
 
 ADA 3. Validación de formularios con JS y FrontEnd Concluido (26/10)
+
+#Metas
+
+Función para pantallas moviles.
