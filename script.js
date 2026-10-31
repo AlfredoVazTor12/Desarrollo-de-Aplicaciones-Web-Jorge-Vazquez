@@ -48,7 +48,7 @@ if (formulario) {
 
         Swal.fire({
             icon: 'success',
-            title: '¡Proyecto Guardado!',
+            title: '¡Proyecto Guardado! (Prueba)',
             text: `El proyecto "${nombre}" ha sido registrado correctamente.`,
             confirmButtonColor: '#28a745',
             customClass: { popup: 'square-popup' },
