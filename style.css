@@ -6,7 +6,7 @@
     border-radius: 0 !important; 
 }
 
-body {
+html, body {
     display: flex;
     background-color: #f4f5f7;
     color: #172b4d;
@@ -113,9 +113,6 @@ tr:hover { background-color: #fafbfc; }
     animation: none !important;
 }
 
-.swal2-success-circular-line-left,
-.swal2-success-circular-line-right,
-.swal2-success-fix {
-    display: none !important;
-    background: transparent !important;
+body.\!h-full[important] {
+  height: 100vh !important;
 }
