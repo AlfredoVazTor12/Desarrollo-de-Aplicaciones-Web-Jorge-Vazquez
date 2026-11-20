@@ -120,7 +120,7 @@ Utiliza el usuario precargado en la base de datos para ingresar al sistema:
 
 ---
 
-## 📖 Manual de Uso
+## Manual de Uso
 
 1. **Inicio de Sesión (`login.php`):**
    * Ingresa tus credenciales. Si intentas acceder directamente a `index.php`, `repositorios.php` o `reportes.php` sin iniciar sesión, el sistema te redirigirá automáticamente al login.
