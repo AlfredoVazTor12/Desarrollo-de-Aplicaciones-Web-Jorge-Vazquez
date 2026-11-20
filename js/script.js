@@ -1,4 +1,3 @@
-
 const contenedorFecha = document.getElementById('fecha-actual');
 if (contenedorFecha) {
     const fecha = new Date();
@@ -18,6 +17,7 @@ if (formulario) {
         const repositorio = document.getElementById('repositorio').checked;
         const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         let mensajeError = "";
+        
 
         if (nombre === "") {
             mensajeError = "El nombre del proyecto es obligatorio.";
@@ -94,3 +94,78 @@ function calcEval() {
     }
 }
 
+fetch('api/crear_proyecto.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ nombre, email, tecnologia, repositorio })
+})
+.then(res => res.json())
+.then(data => {
+    if (data.status === 'success') {
+        Swal.fire({
+            icon: 'success',
+            title: '¡Proyecto Guardado!',
+            text: data.message,
+            confirmButtonColor: '#28a745',
+            customClass: { popup: 'square-popup' }
+        });
+        formulario.reset();
+    } else {
+        Swal.fire({ icon: 'error', title: 'Error', text: data.message });
+    }
+});
+
+function editarProyecto(id, nombreActual, tecActual, progresoActual) {
+    Swal.fire({
+        title: 'Modificar Proyecto',
+        customClass: { popup: 'square-popup' },
+        html: `
+            <input id="swal-nombre" class="form-control" style="margin-bottom:10px" value="${nombreActual}">
+            <select id="swal-tec" class="form-control" style="margin-bottom:10px">
+                <option value="js" ${tecActual === 'js' ? 'selected' : ''}>JavaScript / Node.js</option>
+                <option value="py" ${tecActual === 'py' ? 'selected' : ''}>Python / Django</option>
+                <option value="java" ${tecActual === 'java' ? 'selected' : ''}>Java / Spring</option>
+            </select>
+            <input id="swal-progreso" type="number" min="0" max="100" class="form-control" value="${progresoActual}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Actualizar',
+        confirmButtonColor: '#0052cc',
+        preConfirm: () => {
+            return {
+                id: id,
+                nombre: document.getElementById('swal-nombre').value,
+                tecnologia: document.getElementById('swal-tec').value,
+                progreso: document.getElementById('swal-progreso').value
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch('api/actualizar_proyecto.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(result.value)
+            }).then(() => location.reload());
+        }
+    });
+}
+
+function eliminarProyecto(id) {
+    Swal.fire({
+        title: '¿Desactivar proyecto?',
+        text: 'El proyecto dejará de mostrarse en la lista activa.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        confirmButtonText: 'Sí, desactivar',
+        customClass: { popup: 'square-popup' }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch('api/eliminar_proyecto.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id })
+            }).then(() => location.reload());
+        }
+    });
+}
