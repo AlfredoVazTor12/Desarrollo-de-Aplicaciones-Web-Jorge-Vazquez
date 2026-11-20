@@ -1,3 +1,6 @@
+<?php
+require 'includes/auth_guard.php';
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,28 +8,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DevTrack | Dashboard General</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <aside class="sidebar">
-        <div class="sidebar-header"><h2>DevTrack</h2></div>
-        <ul class="nav-links">
-            <li><a href="index.html" class="active">Dashboard General</a></li>
-            <li><a href="repositorios.html">Repositorios</a></li>
-            <li><a href="reportes.html">Reportes</a></li>
-        </ul>
-    </aside>
+    <?php include 'includes/sidebar.php'; ?>
+    
     <main class="main-content">
         <header class="topbar">
             <h1>Panel de Control</h1>
-            <div style="font-weight: bold; font-size: 0.9rem; color: #5e6c84;">
-                FECHA DEL SISTEMA: <span id="fecha-actual">Cargando...</span>
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div style="font-weight: bold; font-size: 0.85rem; color: #5e6c84;">
+                    FECHA DEL SISTEMA: <span id="fecha-actual">Cargando...</span>
+                </div>
+                <span style="font-weight: bold; font-size: 0.85rem; color: #0052cc;">
+                    USUARIO: <?= htmlspecialchars($_SESSION['usuario_nombre']) ?>
+                </span>
+                <a href="logout.php" class="btn-secondary" style="text-decoration: none;">Cerrar Sesión</a>
             </div>
         </header>
+
         <div class="dashboard-grid">
             <section class="panel">
                 <div class="panel-header">
-                    <h3>Registrar Nuevo Proyecto (Validación JS)</h3>
+                    <h3>Registrar Nuevo Proyecto</h3>
                 </div>
                 <div class="panel-body">
                     <form id="form-proyecto">
@@ -54,6 +58,7 @@
                     </form>
                 </div>
             </section>
+
             <aside class="panel">
                 <div class="panel-header"><h3>Herramientas: Calculadora</h3></div>
                 <div class="panel-body">
@@ -80,6 +85,7 @@
             </aside>
         </div>
     </main>
-    <script src="script.js"></script>
+
+    <script src="assets/js/script.js"></script>
 </body>
 </html>
