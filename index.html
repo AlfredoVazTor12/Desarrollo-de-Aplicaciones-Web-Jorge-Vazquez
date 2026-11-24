@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevTrack | Demo Interactiva (GitHub Pages)</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            border-radius: 0 !important;
+        }
+
+        html, body {
+            background-color: #f4f5f7;
+            color: #172b4d;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Pantalla de Login */
+        #login-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            background-color: #f4f5f7;
+        }
+
+        /* Layout Principal */
+        #app-screen {
+            display: none;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #20262e;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #111;
+            flex-shrink: 0;
+        }
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #3a424e;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .demo-tag {
+            background-color: #0052cc;
+            color: #ffffff;
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+        .nav-links { list-style: none; padding: 20px 0; flex: 1; }
+        .nav-links li a {
+            display: block; padding: 12px 20px; color: #b3bac5;
+            text-decoration: none; font-size: 0.9rem; border-left: 4px solid transparent;
+            cursor: pointer;
+        }
+        .nav-links li a:hover { background-color: #2c353f; color: #ffffff; }
+        .nav-links li a.active { background-color: #2c353f; color: #ffffff; border-left: 4px solid #0052cc; }
+
+        .sidebar-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #3a424e;
+            font-size: 0.75rem;
+            color: #8993a4;
+        }
+
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+
+        .topbar {
+            background-color: #ffffff; padding: 15px 30px;
+            border-bottom: 1px solid #dfe1e6; display: flex;
+            justify-content: space-between; align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+
+        .dashboard-grid {
+            display: grid; grid-template-columns: 2fr 1fr; gap: 20px; padding: 30px;
+        }
+        .full-grid {
+            display: grid; grid-template-columns: 1fr; gap: 20px; padding: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+
+        .panel { background-color: #ffffff; border: 1px solid #dfe1e6; }
+        .panel-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #dfe1e6;
+            background-color: #fafbfc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .panel-body { padding: 20px; }
+
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: bold; margin-bottom: 5px; }
+        .form-control {
+            width: 100%; padding: 10px; border: 1px solid #dfe1e6;
+            font-size: 0.9rem; background-color: #fafbfc;
+        }
+        .form-control:focus { outline: none; border-color: #0052cc; }
+
+        .btn-primary {
+            background-color: #0052cc; color: #ffffff; border: none;
+            padding: 10px 16px; font-size: 0.85rem; font-weight: bold;
+            cursor: pointer; text-transform: uppercase;
+        }
+        .btn-primary.full-width { width: 100%; }
+        .btn-primary:hover { background-color: #0043a6; }
+
+        .btn-secondary {
+            background-color: #ebecf0; color: #42526e; border: 1px solid #dfe1e6;
+            padding: 6px 12px; font-size: 0.75rem; font-weight: bold;
+            cursor: pointer; text-transform: uppercase;
+        }
+        .btn-secondary:hover { background-color: #dfe1e6; }
+
+        .btn-danger {
+            background-color: #ffebe6; color: #bf2600; border: 1px solid #ff5630;
+            padding: 6px 12px; font-size: 0.75rem; font-weight: bold;
+            cursor: pointer; text-transform: uppercase;
+        }
+        .btn-danger:hover { background-color: #ffbdad; }
+
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 10px; text-align: left; border-bottom: 1px solid #dfe1e6; font-size: 0.9rem; }
+        th { background-color: #f4f5f7; color: #5e6c84; font-weight: bold; text-transform: uppercase; font-size: 0.75rem; }
+        tr:hover { background-color: #fafbfc; }
+        .badge { display: inline-block; padding: 3px 6px; font-size: 0.75rem; font-weight: bold; border: 1px solid #dfe1e6; background-color: #ebecf0; color: #42526e; }
+        .badge.status-dev { border-color: #ff991f; background-color: #fffae6; color: #ff8b00; }
+        .badge.status-done { border-color: #36b37e; background-color: #e3fcef; color: #006644; }
+
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+        .calc-display {
+            grid-column: span 4; padding: 10px; text-align: right;
+            font-size: 1.2rem; border: 1px solid #dfe1e6; margin-bottom: 10px;
+            background-color: #20262e; color: #00ff00; font-family: monospace;
+        }
+        .calc-btn {
+            padding: 10px; font-size: 1rem; border: 1px solid #dfe1e6;
+            background-color: #f4f5f7; cursor: pointer; font-weight: bold;
+        }
+        .calc-btn:hover { background-color: #dfe1e6; }
+        .calc-btn.op { background-color: #0052cc; color: white; border-color: #0043a6; }
+
+        .swal2-popup.square-popup {
+            border-radius: 0 !important;
+            border: 1px solid #dfe1e6 !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+            background: #ffffff !important;
+            animation: none !important;
+            transform: none !important;
+        }
+        .swal2-container.swal2-backdrop-show,
+        .swal2-container.swal2-backdrop-hide {
+            animation: none !important;
+            transition: none !important;
+        }
+        .swal2-icon { animation: none !important; }
+    </style>
+</head>
+<body>
+
+    <!-- PANTALLA DE AUTENTICACIÓN (SIMULADA CON SESSIONSTORAGE) -->
+    <div id="login-screen">
+        <div class="panel" style="width: 400px;">
+            <div class="panel-header">
+                <h3>DevTrack | Acceso Demo</h3>
+                <span class="demo-tag">GITHUB PAGES</span>
+            </div>
+            <div class="panel-body">
+                <div style="background: #deebff; color: #0747a6; padding: 10px; margin-bottom: 15px; border: 1px solid #4c9aff; font-size: 0.8rem;">
+                    <strong>Modo Demostrativo:</strong> Usa las credenciales precargadas o cualquier correo válido para explorar el CRUD completo en memoria local.
+                </div>
+                <div id="login-error" style="display: none; background: #ffebe6; color: #bf2600; padding: 10px; margin-bottom: 15px; border: 1px solid #ff5630; font-size: 0.85rem;"></div>
+                <form id="form-login">
+                    <div class="form-group">
+                        <label for="login-email">Correo Electrónico</label>
+                        <input type="email" id="login-email" class="form-control" value="admin@devtrack.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Contraseña</label>
+                        <input type="password" id="login-password" class="form-control" value="admin123" required>
+                    </div>
+                    <button type="submit" class="btn-primary full-width">Ingresar al Sistema</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- APLICACIÓN PRINCIPAL -->
+    <div id="app-screen">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>DevTrack</h2>
+                <span class="demo-tag">DEMO</span>
+            </div>
+            <ul class="nav-links">
+                <li><a id="nav-dashboard" class="active" onclick="cambiarVista('dashboard')">Dashboard General</a></li>
+                <li><a id="nav-repositorios" onclick="cambiarVista('repositorios')">Repositorios</a></li>
+                <li><a id="nav-reportes" onclick="cambiarVista('reportes')">Reportes</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                Persistencia local activa (LocalStorage).<br><br>
+                <button class="btn-secondary" style="width: 100%; font-size: 0.7rem;" onclick="restaurarDatosDemo()">Restaurar Datos Demo</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <h1 id="topbar-title">Panel de Control</h1>
+                <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+                    <div style="font-weight: bold; font-size: 0.85rem; color: #5e6c84;">
+                        FECHA DEL SISTEMA: <span id="fecha-actual">Cargando...</span>
+                    </div>
+                    <span style="font-weight: bold; font-size: 0.85rem; color: #0052cc;">
+                        USUARIO: <span id="usuario-activo">Administrador</span>
+                    </span>
+                    <button class="btn-secondary" onclick="cerrarSesion()">Cerrar Sesión</button>
+                </div>
+            </header>
+
+            <!-- VISTA 1: DASHBOARD GENERAL (CREATE + CALCULADORA) -->
+            <div id="view-dashboard" class="view-section active">
+                <div class="dashboard-grid">
+                    <section class="panel">
+                        <div class="panel-header">
+                            <h3>Registrar Nuevo Proyecto (CREATE)</h3>
+                        </div>
+                        <div class="panel-body">
+                            <form id="form-proyecto">
+                                <div class="form-group">
+                                    <label for="nombre">Nombre del Proyecto *</label>
+                                    <input type="text" id="nombre" class="form-control" placeholder="Ej: API Restful">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Correo del Líder Técnico *</label>
+                                    <input type="text" id="email" class="form-control" placeholder="admin@devtrack.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="tecnologia">Tecnología Principal *</label>
+                                    <select id="tecnologia" class="form-control">
+                                        <option value="">-- Seleccione una --</option>
+                                        <option value="js">JavaScript / Node.js</option>
+                                        <option value="py">Python / Django</option>
+                                        <option value="java">Java / Spring</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label><input type="checkbox" id="repositorio"> Crear repositorio público inmediatamente</label>
+                                </div>
+                                <button type="submit" class="btn-primary full-width">Guardar Proyecto</button>
+                            </form>
+                        </div>
+                    </section>
+
+                    <aside class="panel">
+                        <div class="panel-header"><h3>Herramientas: Calculadora</h3></div>
+                        <div class="panel-body">
+                            <input type="text" id="calc-display" class="calc-display" readonly value="0">
+                            <div class="calc-grid">
+                                <button class="calc-btn" onclick="calcInput('7')">7</button>
+                                <button class="calc-btn" onclick="calcInput('8')">8</button>
+                                <button class="calc-btn" onclick="calcInput('9')">9</button>
+                                <button class="calc-btn op" onclick="calcInput('/')">/</button>
+                                <button class="calc-btn" onclick="calcInput('4')">4</button>
+                                <button class="calc-btn" onclick="calcInput('5')">5</button>
+                                <button class="calc-btn" onclick="calcInput('6')">6</button>
+                                <button class="calc-btn op" onclick="calcInput('*')">*</button>
+                                <button class="calc-btn" onclick="calcInput('1')">1</button>
+                                <button class="calc-btn" onclick="calcInput('2')">2</button>
+                                <button class="calc-btn" onclick="calcInput('3')">3</button>
+                                <button class="calc-btn op" onclick="calcInput('-')">-</button>
+                                <button class="calc-btn op" style="background-color: #dc3545; color: white;" onclick="calcClear()">C</button>
+                                <button class="calc-btn" onclick="calcInput('0')">0</button>
+                                <button class="calc-btn op" style="background-color: #28a745; color: white;" onclick="calcEval()">=</button>
+                                <button class="calc-btn op" onclick="calcInput('+')">+</button>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+
+            <!-- VISTA 2: REPOSITORIOS (READ, UPDATE, DELETE) -->
+            <div id="view-repositorios" class="view-section">
+                <div class="full-grid">
+                    <section class="panel">
+                        <div class="panel-header">
+                            <h3>Proyectos y Repositorios Activos (<span id="contador-activos">0</span>)</h3>
+                            <button class="btn-primary" onclick="cambiarVista('dashboard')">+ Nuevo Proyecto</button>
+                        </div>
+                        <div class="panel-body" style="padding: 0; overflow-x: auto;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Nombre del Proyecto</th>
+                                        <th>Tecnología</th>
+                                        <th>Líder Técnico</th>
+                                        <th>Visibilidad</th>
+                                        <th>Progreso / Estado</th>
+                                        <th>Acciones (UPDATE / DELETE)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-proyectos-body">
+                                    <!-- Renderizado dinámico JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- VISTA 3: REPORTES Y ESTADÍSTICAS -->
+            <div id="view-reportes" class="view-section">
+                <div class="dashboard-grid">
+                    <section class="panel">
+                        <div class="panel-header">
+                            <h3>Progreso de Proyectos Activos</h3>
+                        </div>
+                        <div class="panel-body" id="contenedor-barras-progreso">
+                            <!-- Renderizado dinámico JS -->
+                        </div>
+                    </section>
+
+                    <aside class="panel">
+                        <div class="panel-header">
+                            <h3>Resumen General</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div style="margin-bottom: 15px; padding: 15px; background-color: #fafbfc; border: 1px solid #dfe1e6;">
+                                <h4 style="color: #5e6c84; font-size: 0.8rem; text-transform: uppercase;">Proyectos Activos</h4>
+                                <p id="metric-activos" style="font-size: 2rem; font-weight: bold; color: #172b4d;">0</p>
+                            </div>
+                            <div style="margin-bottom: 15px; padding: 15px; background-color: #fafbfc; border: 1px solid #dfe1e6;">
+                                <h4 style="color: #5e6c84; font-size: 0.8rem; text-transform: uppercase;">Proyectos Completados</h4>
+                                <p id="metric-completados" style="font-size: 2rem; font-weight: bold; color: #36b37e;">0</p>
+                            </div>
+                            <div style="margin-bottom: 15px; padding: 15px; background-color: #fafbfc; border: 1px solid #dfe1e6;">
+                                <h4 style="color: #5e6c84; font-size: 0.8rem; text-transform: uppercase;">Avance Promedio Global</h4>
+                                <p id="metric-promedio" style="font-size: 2rem; font-weight: bold; color: #0052cc;">0%</p>
+                            </div>
+                            <div style="padding: 15px; background-color: #fafbfc; border: 1px solid #dfe1e6;">
+                                <h4 style="color: #5e6c84; font-size: 0.8rem; text-transform: uppercase;">Proyectos Desactivados</h4>
+                                <p id="metric-desactivados" style="font-size: 2rem; font-weight: bold; color: #ff5630;">0</p>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // --- DATOS INICIALES DE DEMOSTRACIÓN ---
+        const DATOS_INICIALES = [
+            { id: 1, nombre: 'backend-api-v1', email: 'carlos.dev@devtrack.com', tecnologia: 'js', repoPublico: true, progreso: 75, estado: 1 },
+            { id: 2, nombre: 'frontend-dashboard', email: 'ana.ui@devtrack.com', tecnologia: 'js', repoPublico: true, progreso: 40, estado: 1 },
+            { id: 3, nombre: 'auth-microservice', email: 'admin@devtrack.com', tecnologia: 'py', repoPublico: false, progreso: 100, estado: 1 },
+            { id: 4, nombre: 'core-banking-service', email: 'luis.java@devtrack.com', tecnologia: 'java', repoPublico: false, progreso: 100, estado: 1 }
+        ];
+
+        const ETIQUETAS_TEC = {
+            'js': 'JavaScript / Node.js',
+            'py': 'Python / Django',
+            'java': 'Java / Spring'
+        };
+
+        // --- INICIALIZACIÓN DE STORAGE ---
+        function obtenerProyectos() {
+            const guardados = localStorage.getItem('devtrack_proyectos_demo');
+            if (!guardados) {
+                localStorage.setItem('devtrack_proyectos_demo', JSON.stringify(DATOS_INICIALES));
+                return [...DATOS_INICIALES];
+            }
+            return JSON.parse(guardados);
+        }
+
+        function guardarProyectos(lista) {
+            localStorage.setItem('devtrack_proyectos_demo', JSON.stringify(lista));
+        }
+
+        function restaurarDatosDemo() {
+            localStorage.setItem('devtrack_proyectos_demo', JSON.stringify(DATOS_INICIALES));
+            renderizarTodo();
+            Swal.fire({
+                icon: 'info',
+                title: 'Datos Restaurados',
+                text: 'Se restablecieron los proyectos de ejemplo.',
+                confirmButtonColor: '#0052cc',
+                customClass: { popup: 'square-popup' }
+            });
+        }
+
+        // --- FECHA DEL SISTEMA ---
+        const contenedorFecha = document.getElementById('fecha-actual');
+        if (contenedorFecha) {
+            const fecha = new Date();
+            const opcionesFecha = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            contenedorFecha.textContent = fecha.toLocaleDateString('es-ES', opcionesFecha).toUpperCase();
+        }
+
+        // --- GESTIÓN DE SESIÓN Y AUTENTICACIÓN ---
+        function verificarSesion() {
+            const sesion = sessionStorage.getItem('devtrack_user_demo');
+            if (sesion) {
+                const user = JSON.parse(sesion);
+                document.getElementById('usuario-activo').textContent = user.nombre;
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('app-screen').style.display = 'flex';
+                renderizarTodo();
+            } else {
+                document.getElementById('login-screen').style.display = 'flex';
+                document.getElementById('app-screen').style.display = 'none';
+            }
+        }
+
+        document.getElementById('form-login').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value.trim();
+            const pass = document.getElementById('login-password').value;
+            const errorBox = document.getElementById('login-error');
+
+            if (email === '' || pass.length < 4) {
+                errorBox.textContent = 'Ingresa un correo válido y una contraseña de al menos 4 caracteres.';
+                errorBox.style.display = 'block';
+                return;
+            }
+
+            errorBox.style.display = 'none';
+            const nombreMostrar = email === 'admin@devtrack.com' ? 'Administrador' : email.split('@')[0];
+            sessionStorage.setItem('devtrack_user_demo', JSON.stringify({ email: email, nombre: nombreMostrar }));
+            verificarSesion();
+        });
+
+        function cerrarSesion() {
+            sessionStorage.removeItem('devtrack_user_demo');
+            verificarSesion();
+        }
+
+        // --- NAVEGACIÓN SPA ---
+        function cambiarVista(vista) {
+            document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
+
+            document.getElementById('view-' + vista).classList.add('active');
+            document.getElementById('nav-' + vista).classList.add('active');
+
+            const titulos = {
+                'dashboard': 'Panel de Control',
+                'repositorios': 'Gestión de Repositorios',
+                'reportes': 'Reportes y Estadísticas'
+            };
+            document.getElementById('topbar-title').textContent = titulos[vista] || 'DevTrack';
+            renderizarTodo();
+        }
+
+        // --- CREATE: REGISTRAR PROYECTO ---
+        document.getElementById('form-proyecto').addEventListener('submit', function(evento) {
+            evento.preventDefault();
+
+            const nombre = document.getElementById('nombre').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const tecnologia = document.getElementById('tecnologia').value;
+            const repositorio = document.getElementById('repositorio').checked;
+            const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            let mensajeError = "";
+
+            if (nombre === "") {
+                mensajeError = "El nombre del proyecto es obligatorio.";
+            } else if (nombre.length < 4) {
+                mensajeError = "El nombre debe tener al menos 4 caracteres.";
+            } else if (email === "") {
+                mensajeError = "El correo del líder técnico es obligatorio.";
+            } else if (!regexEmail.test(email)) {
+                mensajeError = "Por favor, introduce un correo electrónico válido.";
+            } else if (tecnologia === "") {
+                mensajeError = "Debes seleccionar una tecnología principal.";
+            } else if (!repositorio) {
+                mensajeError = "Debes aceptar crear el repositorio público.";
+            }
+
+            if (mensajeError !== "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error de Validación',
+                    text: mensajeError,
+                    confirmButtonColor: '#0052cc',
+                    customClass: { popup: 'square-popup' }
+                });
+                return;
+            }
+
+            const proyectos = obtenerProyectos();
+            const nuevoId = proyectos.length > 0 ? Math.max(...proyectos.map(p => p.id)) + 1 : 1;
+
+            proyectos.unshift({
+                id: nuevoId,
+                nombre: nombre,
+                email: email,
+                tecnologia: tecnologia,
+                repoPublico: repositorio,
+                progreso: 0,
+                estado: 1
+            });
+
+            guardarProyectos(proyectos);
+            renderizarTodo();
+            this.reset();
+
+            Swal.fire({
+                icon: 'success',
+                title: '¡Proyecto Guardado!',
+                text: `El proyecto "${nombre}" se registró correctamente.`,
+                confirmButtonColor: '#28a745',
+                customClass: { popup: 'square-popup' }
+            });
+        });
+
+        // --- UPDATE: EDITAR PROYECTO ---
+        function editarProyecto(id) {
+            const proyectos = obtenerProyectos();
+            const proyecto = proyectos.find(p => p.id === id);
+            if (!proyecto) return;
+
+            Swal.fire({
+                title: 'Modificar Proyecto (UPDATE)',
+                customClass: { popup: 'square-popup' },
+                html: `
+                    <div style="text-align: left; font-size: 0.85rem; margin-bottom: 5px;"><strong>Nombre del Proyecto:</strong></div>
+                    <input id="swal-nombre" class="form-control" style="margin-bottom:12px" value="${proyecto.nombre.replace(/"/g, '&quot;')}">
+                    <div style="text-align: left; font-size: 0.85rem; margin-bottom: 5px;"><strong>Tecnología:</strong></div>
+                    <select id="swal-tec" class="form-control" style="margin-bottom:12px">
+                        <option value="js" ${proyecto.tecnologia === 'js' ? 'selected' : ''}>JavaScript / Node.js</option>
+                        <option value="py" ${proyecto.tecnologia === 'py' ? 'selected' : ''}>Python / Django</option>
+                        <option value="java" ${proyecto.tecnologia === 'java' ? 'selected' : ''}>Java / Spring</option>
+                    </select>
+                    <div style="text-align: left; font-size: 0.85rem; margin-bottom: 5px;"><strong>Progreso (%):</strong></div>
+                    <input id="swal-progreso" type="number" min="0" max="100" class="form-control" value="${proyecto.progreso}">
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Actualizar',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#0052cc',
+                preConfirm: () => {
+                    const nuevoNombre = document.getElementById('swal-nombre').value.trim();
+                    const nuevaTec = document.getElementById('swal-tec').value;
+                    let nuevoProg = parseInt(document.getElementById('swal-progreso').value, 10);
+
+                    if (nuevoNombre.length < 4) {
+                        Swal.showValidationMessage('El nombre debe tener al menos 4 caracteres');
+                        return false;
+                    }
+                    if (isNaN(nuevoProg) || nuevoProg < 0 || nuevoProg > 100) {
+                        Swal.showValidationMessage('El progreso debe estar entre 0 y 100');
+                        return false;
+                    }
+                    return { nombre: nuevoNombre, tecnologia: nuevaTec, progreso: nuevoProg };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    proyecto.nombre = result.value.nombre;
+                    proyecto.tecnologia = result.value.tecnologia;
+                    proyecto.progreso = result.value.progreso;
+                    guardarProyectos(proyectos);
+                    renderizarTodo();
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Actualizado',
+                        text: 'Los cambios del proyecto se han guardado.',
+                        confirmButtonColor: '#28a745',
+                        customClass: { popup: 'square-popup' }
+                    });
+                }
+            });
+        }
+
+        // --- DELETE: BORRADO LÓGICO ---
+        function eliminarProyecto(id) {
+            Swal.fire({
+                title: '¿Desactivar proyecto? (DELETE)',
+                text: 'El proyecto pasará a estado inactivo (Soft Delete) y se reflejará en reportes.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonText: 'Cancelar',
+                confirmButtonText: 'Sí, desactivar',
+                customClass: { popup: 'square-popup' }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const proyectos = obtenerProyectos();
+                    const proyecto = proyectos.find(p => p.id === id);
+                    if (proyecto) {
+                        proyecto.estado = 0;
+                        guardarProyectos(proyectos);
+                        renderizarTodo();
+                    }
+                }
+            });
+        }
+
+        // --- READ & REPORTES: RENDERIZADO DINÁMICO ---
+        function renderizarTodo() {
+            const todos = obtenerProyectos();
+            const activos = todos.filter(p => p.estado === 1);
+            const desactivados = todos.filter(p => p.estado === 0);
+
+            // 1. Tabla de Repositorios
+            document.getElementById('contador-activos').textContent = activos.length;
+            const tbody = document.getElementById('tabla-proyectos-body');
+            if (activos.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 25px; color: #5e6c84;">
+                            No hay proyectos activos registrados. Crea uno desde el Dashboard General.
+                        </td>
+                    </tr>`;
+            } else {
+                tbody.innerHTML = activos.map(p => `
+                    <tr>
+                        <td><strong>${escapeHtml(p.nombre)}</strong></td>
+                        <td><span class="badge">${ETIQUETAS_TEC[p.tecnologia] || p.tecnologia.toUpperCase()}</span></td>
+                        <td>${escapeHtml(p.email)}</td>
+                        <td>${p.repoPublico ? 'Público' : 'Privado'}</td>
+                        <td>
+                            <span class="badge ${p.progreso === 100 ? 'status-done' : 'status-dev'}">
+                                ${p.progreso === 100 ? 'COMPLETADO (100%)' : 'EN PROGRESO (' + p.progreso + '%)'}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn-secondary" onclick="editarProyecto(${p.id})">Editar</button>
+                            <button class="btn-danger" onclick="eliminarProyecto(${p.id})">Desactivar</button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            // 2. Reportes y Estadísticas
+            const completados = activos.filter(p => p.progreso === 100).length;
+            const sumaProgreso = activos.reduce((acc, p) => acc + p.progreso, 0);
+            const promedio = activos.length > 0 ? Math.round(sumaProgreso / activos.length) : 0;
+
+            document.getElementById('metric-activos').textContent = activos.length;
+            document.getElementById('metric-completados').textContent = completados;
+            document.getElementById('metric-promedio').textContent = promedio + '%';
+            document.getElementById('metric-desactivados').textContent = desactivados.length;
+
+            const contenedorBarras = document.getElementById('contenedor-barras-progreso');
+            if (activos.length === 0) {
+                contenedorBarras.innerHTML = '<p style="color: #5e6c84;">No hay proyectos activos para mostrar métricas.</p>';
+            } else {
+                contenedorBarras.innerHTML = activos.map(p => {
+                    let colorBarra = '#ff991f';
+                    if (p.progreso === 100) colorBarra = '#0052cc';
+                    else if (p.progreso >= 60) colorBarra = '#36b37e';
+
+                    return `
+                        <p style="margin-bottom: 10px;">
+                            <strong>${escapeHtml(p.nombre)}</strong>
+                            <span style="font-size: 0.8rem; color: #5e6c84;">(${p.tecnologia.toUpperCase()})</span>
+                        </p>
+                        <div style="width: 100%; background-color: #ebecf0; height: 20px; margin-bottom: 20px;">
+                            <div style="width: ${p.progreso}%; background-color: ${colorBarra}; height: 100%; text-align: center; color: white; font-size: 0.75rem; font-weight: bold; line-height: 20px; min-width: 28px;">
+                                ${p.progreso}%
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // --- CALCULADORA ---
+        const calcDisplay = document.getElementById('calc-display');
+        let currentCalc = "";
+
+        function calcInput(valor) {
+            if (!calcDisplay) return;
+            if (calcDisplay.value === "0" || calcDisplay.value === "Error") {
+                currentCalc = valor;
+            } else {
+                currentCalc += valor;
+            }
+            calcDisplay.value = currentCalc;
+        }
+
+        function calcClear() {
+            if (!calcDisplay) return;
+            currentCalc = "";
+            calcDisplay.value = "0";
+        }
+
+        function calcEval() {
+            if (!calcDisplay) return;
+            try {
+                if (!/^[0-9+\-*/.() ]+$/.test(currentCalc)) throw new Error("Invalid");
+                const resultado = Function('"use strict";return (' + currentCalc + ')')();
+                if (resultado !== undefined && isFinite(resultado)) {
+                    calcDisplay.value = resultado;
+                    currentCalc = resultado.toString();
+                } else {
+                    throw new Error("Math error");
+                }
+            } catch (error) {
+                calcDisplay.value = "Error";
+                currentCalc = "";
+            }
+        }
+
+        // Arrancar aplicación
+        verificarSesion();
+    </script>
+</body>
+</html>
